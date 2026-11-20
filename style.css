@@ -7,7 +7,7 @@
 
 body {
    font-family: 'Arial', sans-serif;
-   background-color: #f4f4f4;
+   background: linear-gradient(135deg, #eaf4ff 0%, #d7e8f7 100%);
    color: #111111;
    min-height: 100vh;
    display: flex;
@@ -102,35 +102,57 @@ button:active {
 
 
 .operator {
-   background-color: #303030;
+   background-color: #4a78a8;
    color: #ffffff;
 }
 
 
 .operator:hover {
-   background-color: #555555;
+   background-color: #3d648d;
 }
 
 
 .clear {
-   background-color: #d1d1d1;
-   color: #111111;
+   background-color: #d95c5c;
+   color: #ffffff;
 }
 
 
 .clear:hover {
-   background-color: #bcbcbc;
+   background-color: #bd4747;
 }
 
 
 .equals {
-   background-color: #111111;
+   background-color: #4f9d69;
    color: #ffffff;
 }
 
 
 .equals:hover {
-   background-color: #404040;
+   background-color: #3d7f54;
+}
+
+
+button[data-action="backspace"] {
+   background-color: #e39a4a;
+   color: #ffffff;
+}
+
+
+button[data-action="backspace"]:hover {
+   background-color: #c98235;
+}
+
+
+button[data-action="percent"] {
+   background-color: #7b6bb5;
+   color: #ffffff;
+}
+
+
+button[data-action="percent"]:hover {
+   background-color: #63549a;
 }
 
 
