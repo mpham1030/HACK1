@@ -95,12 +95,16 @@ keypad.addEventListener("click", (event) => {
 });
 
 document.addEventListener("keydown", (event) => {
-    if (event.altKey || event.ctrlKey || event.metaKey) return;
-    if (event.key === "Enter" && event.target instanceof HTMLButtonElement) return;
+    if (event.ctrlKey || event.altKey || event.metaKey) return;
 
     const key = event.key === "Enter" ? "=" : event.key;
-    if (/^[0-9.+*/=\-]$/.test(key) || key === "Backspace" || key === "Escape") {
-        event.preventDefault();
-        handleKey(key);
-    }
+    const isCalculatorKey =
+        /^[0-9.+*/=-]$/.test(key) ||
+        key === "Backspace" ||
+        key === "Escape";
+
+    if (!isCalculatorKey) return;
+
+    event.preventDefault();
+    handleKey(key);
 });
