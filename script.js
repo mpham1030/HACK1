@@ -1,110 +1,349 @@
-const display = document.querySelector("#display");
-const expression = document.querySelector("#expression");
-const keypad = document.querySelector(".keypad");
-const operatorButtons = keypad.querySelectorAll(".operator");
+const display = document.getElementById("display");
 
-const operators = {
-    "+": { symbol: "+", calculate: (a, b) => a + b },
-    "-": { symbol: "−", calculate: (a, b) => a - b },
-    "*": { symbol: "×", calculate: (a, b) => a * b },
-    "/": { symbol: "÷", calculate: (a, b) => a / b }
-};
 
-let entry = "0";
-let firstNumber = null;
-let operator = null;
-let startNewEntry = true;
+let expression = "";
+let justCalculated = false;
 
-function reset() {
-    entry = "0";
-    firstNumber = null;
-    operator = null;
-    startNewEntry = true;
-    expression.textContent = "";
+
+function updateDisplay() {
+   display.value = expression || "0";
+   display.scrollLeft = display.scrollWidth;
 }
 
-function enterDigit(key) {
-    if (startNewEntry) {
-        entry = "0";
-        startNewEntry = false;
-        if (!operator) expression.textContent = "";
-    }
 
-    if (key === ".") {
-        if (!entry.includes(".")) entry += ".";
-    } else if (entry.replace(".", "").length < 12) {
-        entry = entry === "0" ? key : entry + key;
-    }
+function appendNumber(number) {
+   if (expression === "Error" || justCalculated) {
+       expression = "";
+       justCalculated = false;
+   }
+
+
+   if (number === ".") {
+       const currentNumber = expression.split(/[+\-*/]/).pop();
+
+
+       if (currentNumber.includes(".")) {
+           return;
+       }
+
+
+       if (currentNumber === "") {
+           expression += "0";
+       }
+   }
+
+
+   expression += number;
+   updateDisplay();
 }
+
+
+function chooseOperator(selectedOperator) {
+   if (expression === "Error") return;
+
+
+   justCalculated = false;
+
+
+   if (expression === "") {
+       if (selectedOperator === "-") {
+           expression = "-";
+       }
+       updateDisplay();
+       return;
+   }
+
+
+   if (selectedOperator === "-" && /[+*/]$/.test(expression)) {
+       expression += "-";
+       updateDisplay();
+       return;
+   }
+
+
+   if (/[+\-*/]$/.test(expression)) {
+       expression = expression.slice(0, -1);
+   }
+
+
+   if (expression.endsWith(".")) {
+       expression += "0";
+   }
+
+
+   if (expression === "") {
+       updateDisplay();
+       return;
+   }
+
+
+   expression += selectedOperator;
+   updateDisplay();
+}
+
 
 function calculate() {
-    const secondNumber = Number(entry);
-    const operation = operators[operator];
-    expression.textContent = firstNumber + " " + operation.symbol + " " + entry + " =";
+   if (!expression || expression === "Error") {
+       return;
+   }
 
-    const result = operation.calculate(firstNumber, secondNumber);
 
-    if (operator === "/" && secondNumber === 0) {
-        entry = "Cannot divide by zero";
-    } else if (!Number.isFinite(result)) {
-        entry = "Number too large";
-    } else {
-        entry = String(Number(result.toPrecision(12)));
-    }
+   if (/[+\-*/.]$/.test(expression)) {
+       return;
+   }
 
-    firstNumber = null;
-    operator = null;
-    startNewEntry = true;
-    return Number.isFinite(result);
+
+   try {
+       if (!/^[0-9+\-*/.]+$/.test(expression)) {
+           throw new Error("Invalid expression");
+       }
+
+
+       let position = 0;
+
+
+       function skipNumber() {
+           const remaining = expression.slice(position);
+           const match = remaining.match(
+               /^-?(?:\d+\.?\d*|\.\d+)/
+           );
+
+
+           if (!match) {
+               throw new Error("Invalid number");
+           }
+
+
+           position += match[0].length;
+           return Number(match[0]);
+       }
+
+
+       function parseTerm() {
+           let value = skipNumber();
+
+
+           while (position < expression.length) {
+               const op = expression[position];
+
+
+               if (op !== "*" && op !== "/") {
+                   break;
+               }
+
+
+               position++;
+               const next = skipNumber();
+
+
+               if (op === "*") {
+                   value *= next;
+               } else {
+                   if (next === 0) {
+                       throw new Error("Division by zero");
+                   }
+                   value /= next;
+               }
+           }
+
+
+           return value;
+       }
+
+
+       function parseExpression() {
+           let value = parseTerm();
+
+
+           while (position < expression.length) {
+               const op = expression[position];
+
+
+               if (op !== "+" && op !== "-") {
+                   break;
+               }
+
+
+               position++;
+               const next = parseTerm();
+
+
+               if (op === "+") {
+                   value += next;
+               } else {
+                   value -= next;
+               }
+           }
+
+
+           return value;
+       }
+
+
+       const result = parseExpression();
+
+
+       if (
+           position !== expression.length ||
+           !Number.isFinite(result)
+       ) {
+           throw new Error("Invalid result");
+       }
+
+
+       expression = String(Number(result.toPrecision(12)));
+       justCalculated = true;
+
+
+   } catch (error) {
+       expression = "Error";
+       justCalculated = true;
+   }
+
+
+   updateDisplay();
 }
 
-function chooseOperator(key) {
-    if (!Number.isFinite(Number(entry))) return;
-    if (operator && !startNewEntry && !calculate()) return;
 
-    firstNumber = Number(entry);
-    operator = key;
-    expression.textContent = firstNumber + " " + operators[key].symbol;
-    startNewEntry = true;
+function clearDisplay() {
+   expression = "";
+   justCalculated = false;
+   updateDisplay();
 }
 
-function handleKey(key) {
-    if (/^[0-9.]$/.test(key)) {
-        enterDigit(key);
-    } else if (Object.hasOwn(operators, key)) {
-        chooseOperator(key);
-    } else if (key === "=" && operator && !startNewEntry) {
-        calculate();
-    } else if (key === "Escape") {
-        reset();
-    } else if (key === "Backspace" && !startNewEntry) {
-        entry = entry.slice(0, -1) || "0";
-    }
 
-    display.textContent = entry;
-    display.classList.toggle("compact", entry.length > 10);
+function deleteLast() {
+   if (expression === "Error") {
+       clearDisplay();
+       return;
+   }
 
-    for (const button of operatorButtons) {
-        button.classList.toggle("is-selected", button.dataset.key === operator);
-    }
+
+   expression = expression.slice(0, -1);
+   justCalculated = false;
+   updateDisplay();
 }
 
-keypad.addEventListener("click", (event) => {
-    const button = event.target.closest("button[data-key]");
-    if (button) handleKey(button.dataset.key);
+
+function percentage() {
+   if (!expression || expression === "Error") {
+       return;
+   }
+
+
+   const match = expression.match(/(\d+\.?\d*|\.\d+)$/);
+
+
+   if (!match) return;
+
+
+   const percent = String(
+       Number((Number(match[0]) / 100).toPrecision(12))
+   );
+
+
+   expression =
+       expression.slice(0, -match[0].length) + percent;
+
+
+   justCalculated = false;
+   updateDisplay();
+}
+
+
+document.querySelectorAll(".buttons button").forEach(button => {
+   button.addEventListener("click", () => {
+
+
+       if (button.hasAttribute("data-number")) {
+           appendNumber(button.dataset.number);
+       }
+
+
+       else if (button.hasAttribute("data-operator")) {
+           chooseOperator(button.dataset.operator);
+       }
+
+
+       else if (button.dataset.action === "clear") {
+           clearDisplay();
+       }
+
+
+       else if (button.dataset.action === "backspace") {
+           deleteLast();
+       }
+
+
+       else if (button.dataset.action === "percent") {
+           percentage();
+       }
+
+
+       else if (button.dataset.action === "equals") {
+           calculate();
+       }
+   });
 });
 
-document.addEventListener("keydown", (event) => {
-    if (event.ctrlKey || event.altKey || event.metaKey) return;
 
-    const key = event.key === "Enter" ? "=" : event.key;
-    const isCalculatorKey =
-        /^[0-9.+*/=-]$/.test(key) ||
-        key === "Backspace" ||
-        key === "Escape";
+document.addEventListener("keydown", function(event) {
+   const key = event.key;
 
-    if (!isCalculatorKey) return;
 
-    event.preventDefault();
-    handleKey(key);
+   if (/^[0-9]$/.test(key)) {
+       appendNumber(key);
+   }
+
+
+   else if (key === ".") {
+       appendNumber(".");
+   }
+
+
+   else if (key === "+") {
+       chooseOperator("+");
+   }
+
+
+   else if (key === "-") {
+       chooseOperator("-");
+   }
+
+
+   else if (key === "*") {
+       chooseOperator("*");
+   }
+
+
+   else if (key === "/") {
+       event.preventDefault();
+       chooseOperator("/");
+   }
+
+
+   else if (key === "Enter" || key === "=") {
+       event.preventDefault();
+       calculate();
+   }
+
+
+   else if (key === "Backspace") {
+       event.preventDefault();
+       deleteLast();
+   }
+
+
+   else if (key === "Delete" || key === "Escape") {
+       event.preventDefault();
+       clearDisplay();
+   }
+
+
+   else if (key === "%") {
+       percentage();
+   }
 });
+
+
+updateDisplay();
