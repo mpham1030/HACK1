@@ -1,1 +1,195 @@
+* {
+   margin: 0;
+   padding: 0;
+   box-sizing: border-box;
+}
+
+
+body {
+   font-family: 'Arial', sans-serif;
+   background-color: #f4f4f4;
+   color: #111111;
+   min-height: 100vh;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   padding: 20px;
+}
+
+
+.calculator-container {
+   width: 100%;
+   max-width: 420px;
+   text-align: center;
+}
+
+
+h1 {
+   font-size: 34px;
+   font-weight: 700;
+   letter-spacing: -1px;
+   margin-bottom: 10px;
+   color: #111111;
+}
+
+
+.calculator-container > p {
+   font-size: 14px;
+   color: #777777;
+   margin-bottom: 30px;
+}
+
+
+.calculator {
+   background-color: #ffffff;
+   padding: 25px;
+   border-radius: 22px;
+   border: 1px solid #e8e8e8;
+   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+}
+
+
+#display {
+   width: 100%;
+   height: 95px;
+   background-color: #f2f2f2;
+   color: #111111;
+   border: none;
+   border-radius: 14px;
+   font-size: 38px;
+   font-weight: 600;
+   text-align: right;
+   padding: 18px;
+   margin-bottom: 20px;
+   outline: none;
+}
+
+
+#display::placeholder {
+   color: #999999;
+}
+
+
+.buttons {
+   display: grid;
+   grid-template-columns: repeat(4, 1fr);
+   gap: 12px;
+}
+
+
+button {
+   height: 65px;
+   border: none;
+   border-radius: 14px;
+   background-color: #eeeeee;
+   color: #111111;
+   font-size: 22px;
+   font-weight: 600;
+   cursor: pointer;
+   transition: background-color 0.2s, transform 0.2s;
+}
+
+
+button:hover {
+   background-color: #d8d8d8;
+   transform: translateY(-2px);
+}
+
+
+button:active {
+   transform: scale(0.96);
+}
+
+
+.operator {
+   background-color: #303030;
+   color: #ffffff;
+}
+
+
+.operator:hover {
+   background-color: #555555;
+}
+
+
+.clear {
+   background-color: #d1d1d1;
+   color: #111111;
+}
+
+
+.clear:hover {
+   background-color: #bcbcbc;
+}
+
+
+.equals {
+   background-color: #111111;
+   color: #ffffff;
+}
+
+
+.equals:hover {
+   background-color: #404040;
+}
+
+
+.zero {
+   grid-column: span 2;
+}
+
+
+button:focus-visible {
+   outline: 3px solid #777777;
+   outline-offset: 3px;
+}
+
+
+footer {
+   margin-top: 25px;
+   font-size: 13px;
+   color: #888888;
+}
+
+
+@media (max-width: 480px) {
+   .calculator {
+       padding: 15px;
+   }
+
+
+   h1 {
+       font-size: 28px;
+   }
+
+
+   button {
+       height: 60px;
+       font-size: 20px;
+   }
+
+
+   .buttons {
+       gap: 8px;
+   }
+
+
+   #display {
+       height: 80px;
+       font-size: 30px;
+   }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
