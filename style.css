@@ -5,15 +5,21 @@
 }
 
 
+
 body {
-   font-family: 'Arial', sans-serif;
-   background: linear-gradient(135deg, #eaf4ff 0%, #d7e8f7 100%);
-   color: #111111;
-   min-height: 100vh;
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   padding: 20px;
+    background: linear-gradient(
+        180deg,
+        #130c2e 0%,
+        #51205d 40%,
+        #ad3d72 75%,
+        #f08c56 100%
+    );
+
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
 }
 
 
@@ -29,7 +35,11 @@ h1 {
    font-weight: 700;
    letter-spacing: -1px;
    margin-bottom: 10px;
-   color: #111111;
+   
+color: #ff2d95;
+text-shadow: 0 0 10px #ff2d95,
+             0 0 25px rgba(255, 45, 149, 0.6);
+
 }
 
 
@@ -40,13 +50,18 @@ h1 {
 }
 
 
+
 .calculator {
-   background-color: #ffffff;
-   padding: 25px;
-   border-radius: 22px;
-   border: 1px solid #e8e8e8;
-   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+    background: rgba(25, 12, 48, 0.88);
+    padding: 25px;
+    border-radius: 22px;
+    border: 2px solid #ff2d95;
+    box-shadow:
+        0 0 20px rgba(255, 45, 149, 0.5),
+        0 0 45px rgba(138, 43, 226, 0.3);
+    backdrop-filter: blur(12px);
 }
+
 
 
 #display {
@@ -81,8 +96,8 @@ button {
    height: 65px;
    border: none;
    border-radius: 14px;
-   background-color: #eeeeee;
-   color: #111111;
+   background-color: #34204f;
+   color: #ffffff;
    font-size: 22px;
    font-weight: 600;
    cursor: pointer;
@@ -203,7 +218,219 @@ footer {
 }
 
 
+/* Vice City Mission Passed animation */
 
+.calculator-container {
+    position: relative;
+}
+
+
+.mission-message {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    background: rgba(15, 5, 35, 0.85);
+    text-align: center;
+    pointer-events: none;
+
+    animation: missionFade 2s ease-in-out forwards;
+}
+
+
+
+.mission-message h2 {
+    font-size: clamp(36px, 7vw, 90px);
+    font-weight: 900;
+    color: #ff3cac;
+    text-shadow:
+        0 0 15px #ff1493,
+        0 0 35px #ff1493,
+        0 0 60px #9b2cff;
+
+    animation: missionZoom 0.5s ease-out;
+}
+
+
+.mission-message p {
+    font-size: 18px;
+    font-weight: bold;
+    color: #00ffd5;
+    text-shadow: 0 0 10px #00ffd5;
+}
+
+@keyframes missionFade {
+    0% {
+        opacity: 0;
+    }
+    20% {
+        opacity: 1;
+    }
+    80% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .mission-message {
+        animation: none;
+    }
+}
+
+
+@keyframes missionZoom {
+    0% {
+        opacity: 0;
+        transform: scale(0.4);
+    }
+
+    70% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .mission-message h2 {
+        animation: none;
+    }
+}
+
+/* GTA-inspired Wanted Stars */
+#wanted-stars {
+    text-align: center;
+    font-size: 32px;
+    letter-spacing: 8px;
+    color: #ffd700;
+    text-shadow:
+        0 0 10px #ffd700,
+        0 0 20px #ff9900,
+        0 0 30px #ff6600;
+    margin-bottom: 10px;
+    transition: all 0.3s ease;
+}
+
+/* GTA-style Wanted Star Pulse Animation */
+
+@keyframes wantedPulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+        text-shadow:
+            0 0 20px #ffd700,
+            0 0 40px #ff9900,
+            0 0 60px #ff6600;
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Activate the animation */
+#wanted-stars.wanted-active {
+    animation: wantedPulse 0.6s ease-in-out;
+}
+/* GTA Vice City Virtual Cash Display */
+
+#cash-display {
+    color: #00ff99;
+    font-size: 32px;
+    font-weight: 900;
+    text-align: center;
+    letter-spacing: 3px;
+    margin: 10px 0 20px;
+
+    text-shadow:
+        0 0 5px #00ff99,
+        0 0 15px #00ff99,
+        0 0 30px #00cc77;
+}
+/* GTA Virtual Cash Reward Animation */
+
+.cash-reward {
+    animation: cashPulse 0.6s ease-out;
+}
+
+@keyframes cashPulse {
+    0% {
+        transform: scale(1);
+    }
+
+    40% {
+        transform: scale(1.25);
+        color: #ffffff;
+        text-shadow: 0 0 30px #00ff99;
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Vice City neon number button hover */
+
+/* Vice City neon glow for number buttons only */
+button[data-number]:hover {
+    background-color: #6937a8;
+    color: #ffffff;
+    box-shadow:
+        0 0 12px rgba(168, 85, 247, 0.8),
+        0 0 25px rgba(168, 85, 247, 0.4);
+    transform: translateY(-2px);
+}
+
+/* Vice City cyan neon operator buttons */
+button.operator {
+    background-color: #087e91;
+    color: #ffffff;
+    border: 1px solid #00f5ff;
+    box-shadow: 0 0 8px rgba(0, 245, 255, 0.3);
+}
+
+/* Cyan glow when hovering */
+button.operator:hover {
+    background-color: #00a9bd;
+    box-shadow:
+        0 0 15px rgba(0, 245, 255, 0.8),
+        0 0 30px rgba(0, 245, 255, 0.4);
+    transform: translateY(-2px);
+}
+
+/* Vice City neon green equals button */
+button.equals {
+    background-color: #168a57;
+    color: #ffffff;
+    border: 1px solid #00ff99;
+    box-shadow: 0 0 10px rgba(0, 255, 153, 0.4);
+}
+
+/* Neon green glow on hover */
+button.equals:hover {
+    background-color: #00b86b;
+    box-shadow:
+        0 0 15px rgba(0, 255, 153, 0.9),
+        0 0 30px rgba(0, 255, 153, 0.5);
+    transform: translateY(-2px);
+}
 
 
 
