@@ -3,6 +3,8 @@ const display = document.getElementById("display");
 
 let expression = "";
 let justCalculated = false;
+let wantedLevel = 0;
+let virtualCash = 0;
 
 
 function updateDisplay() {
@@ -194,6 +196,9 @@ function calculate() {
        expression = String(Number(result.toPrecision(12)));
        justCalculated = true;
 
+       // Trigger our Vice City celebration
+    showMissionPassed();
+
 
    } catch (error) {
        expression = "Error";
@@ -201,8 +206,73 @@ function calculate() {
    }
 
 
-   updateDisplay();
+   updateDisplay();  
 }
+
+
+function showMissionPassed() {
+    // Reward player with $100 virtual cash
+       virtualCash += 100;
+
+console.log("Virtual Cash: $" + virtualCash);
+
+// Update the cash display on screen
+const cashDisplay = document.getElementById("cash-display");
+
+cashDisplay.textContent = "$" + String(virtualCash).padStart(6, "0");
+
+// Restart the cash reward animation
+cashDisplay.classList.remove("cash-reward");
+void cashDisplay.offsetWidth;
+cashDisplay.classList.add("cash-reward");
+
+    // Increase wanted level after each successful calculation
+    wantedLevel = (wantedLevel % 5) + 1;
+    console.log("Wanted Level:", wantedLevel);
+
+    
+    // Update the wanted stars display
+    const wantedStars = document.getElementById("wanted-stars");
+
+    wantedStars.textContent =
+        "★".repeat(wantedLevel) +
+        "☆".repeat(5 - wantedLevel);
+
+    // Restart the gold star animation
+    wantedStars.classList.remove("wanted-active");
+    void wantedStars.offsetWidth;
+    wantedStars.classList.add("wanted-active");
+
+    // Create five wanted stars
+    const stars = "★".repeat(wantedLevel) +
+                  "☆".repeat(5 - wantedLevel);
+
+    console.log("Wanted Stars:", stars);
+
+
+
+    // Remove an old message if one exists
+    document.querySelector(".mission-message")?.remove();
+
+    // Create the mission message
+    const message = document.createElement("div");
+    message.className = "mission-message";
+
+    message.innerHTML = `
+        <h2>MISSION PASSED!</h2>
+        <p>RESPECT +100</p>
+    `;
+
+    // Display it on the calculator
+    document.querySelector(".calculator-container").appendChild(message);
+
+    // Remove it after 2 seconds
+    setTimeout(() => {
+        message.remove();
+    }, 2000);
+}
+
+
 
 
 function clearDisplay() {
